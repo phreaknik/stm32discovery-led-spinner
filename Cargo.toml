@@ -18,12 +18,15 @@ description = "A 'spinning LED' demo for the STM32F3 Discovery board."
 keywords = ["arm", "cortex-m", "template", "stm", "stm32"]
 categories = ["embedded", "no-std"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/japaric/cortex-m-quickstart"
+repository = "https://github.com/phreaknik/stm32f3discovery-led-spinner"
+
 [profile.release]
 lto = true
 debug = true
+
 [dependencies.cortex-m-rt]
 version = "0.2.3"
+features = ["panic-over-semihosting"]
 
 [dependencies.cortex-m]
 version = "0.2.7"
