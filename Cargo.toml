@@ -28,6 +28,10 @@ debug = true
 version = "0.2.3"
 features = ["panic-over-semihosting"]
 
+[dependencies.cast]
+version = "0.2.0"
+default-features = false
+
 [dependencies]
 cortex-m = "0.2.7"
 f3 = "0.4.1"
