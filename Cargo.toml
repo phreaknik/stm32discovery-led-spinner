@@ -11,19 +11,23 @@
 # will likely look very different (and much more reasonable)
 
 [package]
-name = "cortex-m-quickstart"
-version = "0.1.8"
-authors = ["Jorge Aparicio <jorge@japaric.io>"]
-description = "A template for building applications for ARM Cortex-M microcontrollers"
-keywords = ["arm", "cortex-m", "template"]
+name = "stm32f3discovery-led-spinner"
+version = "0.1.0"
+authors = ["John Boyd <johnboydiv@gmail.com>"]
+description = "A 'spinning LED' demo for the STM32F3 Discovery board."
+keywords = ["arm", "cortex-m", "template", "stm", "stm32"]
 categories = ["embedded", "no-std"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/japaric/cortex-m-quickstart"
+repository = "https://github.com/phreaknik/stm32f3discovery-led-spinner"
+
 [profile.release]
 lto = true
 debug = true
+
 [dependencies.cortex-m-rt]
 version = "0.2.3"
+features = ["panic-over-semihosting"]
 
-[dependencies.cortex-m]
-version = "0.2.7"
+[dependencies]
+cortex-m = "0.2.7"
+f3 = "0.4.1"
