@@ -1,69 +1,99 @@
+// examples/blinky.rs
+//! Blinks an LED
+
+#![feature(const_fn)]
 #![feature(used)]
 #![no_std]
-
-// version = "0.2.4"
-extern crate cortex_m;
 
 // version = "0.2.0"
 extern crate cortex_m_rt;
 
-// version = "0.4.0"
+// version = "0.1.0"
+#[macro_use]
+extern crate cortex_m_rtfm as rtfm;
+
+// version = "0.4.1"
 extern crate f3;
 
-use cortex_m::asm;
 use f3::led::{self, LEDS};
-use f3::stm32f30x::{GPIOE, RCC, TIM7};
+use f3::stm32f30x::interrupt::Tim7;
+use f3::stm32f30x;
 use f3::timer::Timer;
+use rtfm::{Local, P0, P1, T0, T1, TMax};
 
-/// Timer frequency
-const FREQUENCY: u32 = 1;
+// CONFIGURATION
+const FREQUENCY: u32 = 1; // Hz
 
-#[inline(never)]
-fn main() {
-    // Critical section
-    cortex_m::interrupt::free(
-        |cs| {
-            // Exclusive access to the peripherals
-            let gpioe = GPIOE.borrow(cs);
-            let rcc = RCC.borrow(cs);
-            let tim7 = TIM7.borrow(cs);
+// RESOURCES
+peripherals!(stm32f30x, {
+    GPIOE: Peripheral {
+        register_block: Gpioe,
+        ceiling: C0,
+    },
+    RCC: Peripheral {
+        register_block: Rcc,
+        ceiling: C0,
+    },
+    TIM7: Peripheral {
+        register_block: Tim7,
+        ceiling: C1,
+    },
+});
 
-            // Configure the PEx pins as output pins
-            led::init(gpioe, rcc);
+// INITIALIZATION PHASE
+fn init(ref priority: P0, threshold: &TMax) {
+    let gpioe = GPIOE.access(priority, threshold);
+    let rcc = RCC.access(priority, threshold);
+    let tim7 = TIM7.access(priority, threshold);
+    let timer = Timer(&tim7);
 
-            // Configure TIM7 for periodic timeouts
-            let timer = Timer(tim7);
-            timer.init(rcc, FREQUENCY);
+    // Configure the PEx pins as output pins
+    led::init(&gpioe, &rcc);
 
-            // Start the timer
-            timer.resume();
+    // Configure TIM7 for periodic update events
+    timer.init(&rcc, FREQUENCY);
 
-            let mut state = false;
-            loop {
-                // Wait for an update event *and* clear the update event flag
-                while timer.clear_update_flag().is_err() {}
-
-                // Toggle the state
-                state = !state;
-
-                // Blink the LED
-                if state {
-                    LEDS[0].on();
-                } else {
-                    LEDS[0].off();
-                }
-            }
-        },
-    );
-
+    // Start the timer
+    timer.resume();
 }
 
-// This part is the same as before
-#[allow(dead_code)]
-#[used]
-#[link_section = ".rodata.interrupts"]
-static INTERRUPTS: [extern "C" fn(); 240] = [default_handler; 240];
+// IDLE LOOP
+fn idle(_priority: P0, _threshold: T0) -> ! {
+    // Sleep
+    loop {
+        rtfm::wfi();
+    }
+}
 
-extern "C" fn default_handler() {
-    asm::bkpt();
+// TASKS
+tasks!(stm32f30x, {
+    periodic: Task {
+        interrupt: Tim7,
+        priority: P1,
+        enabled: true,
+    },
+});
+
+fn periodic(mut task: Tim7, ref priority: P1, ref threshold: T1) {
+    // Task local data
+    static STATE: Local<bool, Tim7> = Local::new(false);
+
+    let tim7 = TIM7.access(priority, threshold);
+    let timer = Timer(&tim7);
+
+    if timer.clear_update_flag().is_ok() {
+        let state = STATE.borrow_mut(&mut task);
+
+        *state = !*state;
+
+        if *state {
+            LEDS[0].on();
+        } else {
+            LEDS[0].off();
+        }
+    } else {
+        // Only reachable through `rtfm::request(periodic)`
+        #[cfg(debug_assertion)]
+        unreachable!()
+    }
 }

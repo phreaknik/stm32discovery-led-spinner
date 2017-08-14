@@ -31,3 +31,4 @@ features = ["panic-over-semihosting"]
 [dependencies]
 cortex-m = "0.2.7"
 f3 = "0.4.1"
+cortex-m-rtfm = "0.1.0"
