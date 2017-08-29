@@ -21,7 +21,11 @@ use f3::stm32f30x;
 use rtfm::{P0, P1, T0, T1, TMax};
 use stm32f30x::interrupt::Exti0;
 
-fn init(_prio: P0, _thr: &TMax) {}
+fn init(_prio: P0, _thr: &TMax) {
+    // Set breakpoint at beginning of init() to allow debugger to easily
+    // step into beginning of application code using RTFM framework.
+    rtfm::bkpt();
+}
 
 fn idle(_prio: P0, _thr: T0) -> ! {
     rtfm::request(t1);
@@ -43,7 +47,7 @@ tasks!(stm32f30x, {
 fn t1(_task: Exti0, _prio: P1, _thr: T1) {
     rtfm::bkpt();
 
-    hprintln!("The quick brown fox jumps over the lazy dog.");
+    hprintln!("Hello, world!");
 
     rtfm::bkpt();
 }
