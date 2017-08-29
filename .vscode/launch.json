@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Remote ARM (arm-none-eabi-gdb)",
+            "name": "ARM (arm-none-eabi-gdb)",
             "type": "gdb",
             "request": "attach",
             "gdbpath": "arm-none-eabi-gdb",
