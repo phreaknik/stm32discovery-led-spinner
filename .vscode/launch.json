@@ -10,6 +10,7 @@
             "cwd": "${workspaceRoot}",
             "remote": true,
             "target": "localhost:3333",
+            "preLaunchTask": "xargo build",
             "autorun": [
                 // Enable semihosting
                 "monitor arm semihosting enable",
