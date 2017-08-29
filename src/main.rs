@@ -7,6 +7,7 @@
 extern crate cortex_m;
 
 // version = "0.2.3"
+#[allow(unused_extern_crates)]
 extern crate cortex_m_rt;
 
 // version = "0.1.0"
