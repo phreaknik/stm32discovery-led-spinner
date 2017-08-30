@@ -19,6 +19,18 @@
             "type": "shell",
             "command": "openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg",
             "isBackground": true
+        },
+        {
+            // Monitor redirect ARM ITM output to stdout
+            //
+            // Note:    Requires `itmdump` to be installed, and expects
+            //          ITM output to be captured from a pipe named `itm.fifo`
+            //
+            //          Install with: `cargo install itm --vers 0.1.1`
+            "taskName": "itmdump",
+            "type": "shell",
+            "command": "itmdump itm.fifo",
+            "isBackground": true
         }
     ]
 }
