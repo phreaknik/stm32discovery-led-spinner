@@ -17,7 +17,7 @@ authors = ["John Boyd <johnboydiv@gmail.com>"]
 description = "A 'spinning LED' demo for the STM32F3 Discovery board."
 keywords = ["arm", "cortex-m", "template", "stm", "stm32"]
 categories = ["embedded", "no-std"]
-license = "MIT OR Apache-2.0"
+license = "MIT"
 repository = "https://github.com/phreaknik/stm32f3discovery-led-spinner"
 
 [profile.release]
