@@ -18,7 +18,8 @@
             "taskName": "OpenOCD STM32F3x",
             "type": "shell",
             "command": "openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg",
-            "isBackground": true
+            "isBackground": true,
+            "problemMatcher": []
         },
         {
             // Monitor redirect ARM ITM output to stdout
