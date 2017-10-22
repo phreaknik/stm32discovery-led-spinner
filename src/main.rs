@@ -29,10 +29,12 @@ app! {
     tasks: {
         SYS_TICK: {
             path: toggle,
+            priority: 1,
             resources: [ON],
         },
         USART1_EXTI25: {
             path: loopback,
+            priority: 1,
             resources: [USART1],
         }
     }
