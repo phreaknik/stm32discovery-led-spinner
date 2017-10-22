@@ -22,6 +22,7 @@ debug = true
 
 [dependencies]
 f3 = { git = "https://github.com/japaric/f3" } # Temporarily pull from github until 0.5.0 is released.
+cortex-m = "0.3.1"
 cortex-m-rtfm = "0.2.1"
 cortex-m-semihosting = "0.2.0"
 
